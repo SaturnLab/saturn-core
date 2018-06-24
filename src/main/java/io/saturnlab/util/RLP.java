@@ -1,4 +1,4 @@
-package org.clusterchain.util;
+package io.saturnlab.util;
 
 
 import java.math.BigInteger;
@@ -16,10 +16,6 @@ import org.spongycastle.util.encoders.Hex;
 import static java.util.Arrays.copyOfRange;
 import static org.spongycastle.util.Arrays.concatenate;
 import static org.spongycastle.util.BigIntegers.asUnsignedByteArray;
-
-
-
-import static org.clusterchain.util.ByteUtil.*;
 
 
 /**
@@ -672,7 +668,7 @@ public class RLP {
       return new DecodeResult(pos + 1 + len, copyOfRange(data, pos + 1, pos + 1 + len));
     } else if (prefix < OFFSET_SHORT_LIST) {  // [0xb8, 0xbf]
       int lenlen = prefix - OFFSET_LONG_ITEM; // length of length the encoded bytes
-      int lenbytes = byteArrayToInt(copyOfRange(data, pos + 1, pos + 1 + lenlen)); // length of encoded bytes
+      int lenbytes = ByteUtil.byteArrayToInt(copyOfRange(data, pos + 1, pos + 1 + lenlen)); // length of encoded bytes
       return new DecodeResult(pos + 1 + lenlen + lenbytes, copyOfRange(data, pos + 1 + lenlen, pos + 1 + lenlen
           + lenbytes));
     } else if (prefix <= OFFSET_LONG_LIST) {  // [0xc0, 0xf7]
@@ -682,7 +678,7 @@ public class RLP {
       return decodeList(data, pos, prevPos, len);
     } else if (prefix <= 0xFF) {  // [0xf8, 0xff]
       int lenlen = prefix - OFFSET_LONG_LIST; // length of length the encoded list
-      int lenlist = byteArrayToInt(copyOfRange(data, pos + 1, pos + 1 + lenlen)); // length of encoded bytes
+      int lenlist = ByteUtil.byteArrayToInt(copyOfRange(data, pos + 1, pos + 1 + lenlen)); // length of encoded bytes
       pos = pos + lenlen + 1; // start at position of first element in list
       int prevPos = lenlist;
       return decodeList(data, pos, prevPos, lenlist);
@@ -761,7 +757,7 @@ public class RLP {
         pos += len + 1;
       } else if (prefix < OFFSET_SHORT_LIST) {  // [0xb8, 0xbf]
         int lenlen = prefix - OFFSET_LONG_ITEM; // length of length the encoded bytes
-        int lenbytes = byteArrayToInt(copyOfRange(data, pos + 1, pos + 1 + lenlen)); // length of encoded bytes
+        int lenbytes = ByteUtil.byteArrayToInt(copyOfRange(data, pos + 1, pos + 1 + lenlen)); // length of encoded bytes
         ret.add(pos + 1 + lenlen, lenbytes, false);
         pos += 1 + lenlen + lenbytes;
       } else if (prefix <= OFFSET_LONG_LIST) {  // [0xc0, 0xf7]
@@ -770,7 +766,7 @@ public class RLP {
         pos += 1 + len;
       } else if (prefix <= 0xFF) {  // [0xf8, 0xff]
         int lenlen = prefix - OFFSET_LONG_LIST; // length of length the encoded list
-        int lenlist = byteArrayToInt(copyOfRange(data, pos + 1, pos + 1 + lenlen)); // length of encoded bytes
+        int lenlist = ByteUtil.byteArrayToInt(copyOfRange(data, pos + 1, pos + 1 + lenlen)); // length of encoded bytes
         ret.add(pos + 1 + lenlen, lenlist, true);
         pos += 1 + lenlen + lenlist; // start at position of first element in list
       } else {
@@ -840,7 +836,7 @@ public class RLP {
     } else if (length < MAX_ITEM_LENGTH) {
       byte[] binaryLength;
       if (length > 0xFF)
-        binaryLength = intToBytesNoLeadZeroes(length);
+        binaryLength = ByteUtil.intToBytesNoLeadZeroes(length);
       else
         binaryLength = new byte[]{(byte) length};
       byte firstByte = (byte) (binaryLength.length + offset + SIZE_THRESHOLD - 1);
@@ -902,9 +898,9 @@ public class RLP {
 
   public static byte[] encodeElement(byte[] srcData) {
 
-    if (isNullOrZeroArray(srcData))
+    if (ByteUtil.isNullOrZeroArray(srcData))
       return new byte[]{(byte) OFFSET_SHORT_ITEM};
-    else if (isSingleZero(srcData))
+    else if (ByteUtil.isSingleZero(srcData))
       return srcData;
     else if (srcData.length == 1 && (srcData[0] & 0xFF) < 0x80) {
       return srcData;
@@ -941,9 +937,9 @@ public class RLP {
 
   public static int calcElementPrefixSize(byte[] srcData) {
 
-    if (isNullOrZeroArray(srcData))
+    if (ByteUtil.isNullOrZeroArray(srcData))
       return 0;
-    else if (isSingleZero(srcData))
+    else if (ByteUtil.isSingleZero(srcData))
       return 0;
     else if (srcData.length == 1 && (srcData[0] & 0xFF) < 0x80) {
       return 0;
