@@ -4,7 +4,7 @@ import com.cedarsoftware.util.DeepEquals;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-//import io.saturnlab.crypto.HashUtil;
+import io.saturnlab.crypto.HashUtil;
 import org.spongycastle.util.encoders.Hex;
 
 
@@ -158,11 +158,11 @@ public class Value {
     return rlp;
   }
 
-//  public byte[] hash(){
-//    if (sha3 == null)
-//      sha3 = HashUtil.sha3(encode());
-//    return sha3;
-//  }
+  public byte[] hash(){
+    if (sha3 == null)
+      sha3 = HashUtil.sha3(encode());
+    return sha3;
+  }
 
   public boolean cmp(Value o) {
     return DeepEquals.deepEquals(this, o);

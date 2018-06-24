@@ -7,6 +7,7 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 ext {
     slf4jVersion = '1.7.7'
@@ -17,6 +18,7 @@ ext {
 
 dependencies {
     testCompile "junit:junit:${junitVersion}"
+    compile 'com.github.SaturnLab:saturn-cryto:v0.12'
     compile "com.madgag.spongycastle:core:${scastleVersion}" // for SHA3 and SECP256K1
     compile "com.madgag.spongycastle:prov:${scastleVersion}" // for SHA3 and SECP256K1
     compile "org.slf4j:slf4j-api:${slf4jVersion}"
